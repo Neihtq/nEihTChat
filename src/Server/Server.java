@@ -4,38 +4,43 @@ package Server; /**
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Scanner;
 
 public class Server {
     public static void main (String[] args) {
         Server server = new Server();
-        try {
-            server.test();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+           try {
+               server.test();
+           } catch (IOException e) {
+               e.printStackTrace();
+           }
     }
 
     void test() throws IOException {
         int port = 11111;
-        ServerSocket serverSocket = new ServerSocket(port);
-        Socket client = waitforSignIn(serverSocket);
-        String message = readMessage(client);
 
-        System.out.println("The message is: ");
-        System.out.println(message);
-        writeMessage(client, message);
+            ServerSocket serverSocket = new ServerSocket(port);
+
+            Socket client = waitforSignIn(serverSocket);
+        while(true){
+            String message = readMessage(client);
+
+            System.out.println(message);
+
+            Scanner sc = new Scanner(System.in);
+            String reply = sc.nextLine();
+            writeMessage(client, reply);
+        }
     }
 
     Socket waitforSignIn(ServerSocket serverSocket) throws IOException {
-        System.out.println("I am listening now for any clients connecting to me (server)!");
+            Socket socket = serverSocket.accept(); // blocks, until client has signed in
+            System.out.println("A Client has logged in!");
+            return socket;
 
-        Socket socket = serverSocket.accept(); // blocks, until client has signed in
-        return socket;
     }
 
     String readMessage(Socket socket) throws IOException {
-        System.out.println("I will read its message now...");
-
         BufferedReader bufferedReader =
                 new BufferedReader(new InputStreamReader(socket.getInputStream()));
         char[] buffer = new char [256];
