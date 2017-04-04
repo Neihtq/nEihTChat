@@ -35,7 +35,7 @@ public class Client {
         String values = sb.toString().trim();
         try {
             // irrelevant thread for illustrating the concurrency of execution
-            Thread t1 = new Thread(new OtherThread());
+            Thread t1 = new Thread(new otherThread());
             t1.start();
             Client cl = new Client(values);
             cl.worker();
@@ -52,10 +52,9 @@ public class Client {
     void worker() throws Exception {
         System.out.println("worker: " + Thread.currentThread());
         // class that implements 'Callable'
-        ClientHandler ch = new ClientHandler(value);
-        boolean continue = false;
+        ClientHandler ch = new ClientHandler(values);
 
-
+        boolean cont = false;
         do { // 2 runs
             int j = 0;
             //call-method 'ch' from ClientHandler executed with 'FutureTask' asynchronous
@@ -74,12 +73,12 @@ public class Client {
             System.out.println(ft.get()); // return result
             if (values.compareTo("Exit") == 0)
                 break;
-            continue = !continue;
-            if (continue){
+            cont = !cont;
+            if (cont){
                 // 2nd Call for Client-request, modify recent value
                 ch.setValue (values.substring(0, values.length()-4) + "1813");
             }
-        } while(continue);
+        } while(cont);
     }
 }
 // Contains call-method for FutureTask (= run from Thread)
@@ -92,7 +91,7 @@ class ClientHandler implements Callable<String> {
         this.values = values;
     }
 
-    voit setValue(String s) {
+    void setValue(String s) {
         values = s;
     }
 
@@ -103,4 +102,58 @@ class ClientHandler implements Callable<String> {
         return RequestServer(values);
     }
 
+    // open Socket, send request, receive result, close Socket
+    String RequestServer(String par) throws IOException {
+        String rec_message;
+        String toSend_message;
+
+        Socket socket = new Socket(ip, port); //connects to Server
+        toSend_message = par;
+        //send request
+        writeMessage(socket, toSend_message);
+        //receive result
+        rec_message = readMessage(socket);
+        socket.close();
+        return rec_message;
+    }
+
+    void writeMessage(Socket socket, String message) throws IOException {
+        PrintWriter printWriter =
+                new PrintWriter(
+                        new OutputStreamWriter(
+                                socket.getOutputStream()
+                        )
+                );
+        printWriter.print(message);
+        printWriter.flush();
+    }
+
+    String readMessage(Socket socket) throws IOException {
+        BufferedReader bufferedReader =
+                new BufferedReader(
+                        new InputStreamReader(
+                                socket.getInputStream()
+                        )
+                );
+
+        char[] buffer = new char[100];
+        // blocks until message received
+        int numb_digits = bufferedReader.read(buffer, 0, 100);
+        String message = new String(buffer, 0, numb_digits);
+        return message;
+    }
+}
+
+class otherThread implements Runnable {
+    public void run() {
+        System.out.println(" OtherThread:" + Thread.currentThread());
+        int n = 0;
+        int w = 25000000;
+        // using enough CPU-Time
+        for (int i = 1; i <= 10; i++)
+            for (int j = 1; j <= w; j++){
+            if (j% w == 0)
+                System.out.println("   n =" + (++n));
+            }
+    }
 }
