@@ -50,10 +50,10 @@ public class Server {
     }
 
     void writeMessage(Socket socket, String message) throws IOException {
-        PrintWriter printWriter =
-                new PrintWriter(
-                        new OutputStreamWriter(
-                                socket.getOutputStream()));
+        OutputStreamWriter a = new OutputStreamWriter(socket.getOutputStream());
+        PrintWriter b = new PrintWriter(a);
+
+        PrintWriter printWriter = new PrintWriter(b);
         printWriter.print(message);
         printWriter.flush();
     }

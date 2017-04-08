@@ -88,7 +88,7 @@ class NetworkService implements Runnable { // or "extends Thread"
                 /*
                 Accepting client request (.accept()). Then ExecutorService pool gives a thread, whose run method
                 is done by run method of Handler-Instance.
-                 Handler takes following parameters: ServerSocket and Socket of requesting Client
+                Handler takes following parameters: ServerSocket and Socket of requesting Client
                  */
                 Socket cs = serverSocket.accept(); // waiting for client request
 

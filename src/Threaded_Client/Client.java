@@ -21,16 +21,14 @@ public class Client {
     String values;
 
     public static void main(String[] args) {
-        if (args.length == 0) {
+        /*if (args.length == 0) {
             System.out.println("Datum-Parameter fehlen !");
             System.exit(1);
-        }
+        }*/
 
         StringBuffer sb = new StringBuffer();
         // wrap all arguments, separated by whitespaces
-        for (int i = 0; i < args.length; i++) {
-            sb.append(args[i] + ' ');
-        }
+        sb.append(" TEST ");
 
         String values = sb.toString().trim();
         try {
@@ -87,7 +85,7 @@ class ClientHandler implements Callable<String> {
     int port = 3141;
     String values;
 
-    public ClientHandler(String werte) {
+    public ClientHandler(String values) {
         this.values = values;
     }
 
