@@ -19,7 +19,7 @@ public class Client {
 
     void test() throws IOException {
         String ip = "127.0.0.1"; // localhost
-        int port = 9000;
+        int port = 1995;
 
         Socket socket = new Socket(ip, port); // connects to server
 
@@ -29,8 +29,8 @@ public class Client {
 
         writeMessage(socket, message);
 
-        String rec_message = readMessage(socket);
-        System.out.println(rec_message);
+        //String rec_message = readMessage(socket);
+        //System.out.println(rec_message);
         }
     }
 

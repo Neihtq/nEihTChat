@@ -82,7 +82,7 @@ public class Client {
 // Contains call-method for FutureTask (= run from Thread)
 class ClientHandler implements Callable<String> {
     String ip = "127.0.0.1"; //localhost
-    int port = 3141;
+    int port = 1995;
     String values;
 
     public ClientHandler(String values) {
