@@ -14,10 +14,11 @@ public class nEihTServer implements Runnable {
     private int serverPort;
     private ServerSocket serverSocket;
     private boolean stopped = false;
+    private static Socket clientSocket;
 
     private final int max_socket = 8;
 
-    Socket[] room = new Socket[max_socket];
+    Client[] room = new Client[max_socket];
 
     public nEihTServer(int port) {
         this.serverPort = port;
@@ -28,7 +29,6 @@ public class nEihTServer implements Runnable {
         openSocket();
         System.out.println("Start Server...");
         while (!(this.stopped)) {
-            Socket clientSocket = null;
             try {
                 clientSocket = this.serverSocket.accept();
                 System.out.println("Found client!");
@@ -37,17 +37,11 @@ public class nEihTServer implements Runnable {
                     System.out.println("Room is full!");
                         toFull(clientSocket);
                         clientSocket.close();
-                } else {
-                    room[c] = clientSocket;
-                    System.out.println("Client connected");
-                    new Thread(new Client(clientSocket, c, room)).start();
-                    c++;
                 }
-
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                if (room[c] == null){
+                    (room[c] = new Client(clientSocket, c, room)).start();
+                    System.out.println("Client connected");
+                    c++;
                 }
 
             } catch (IOException e) {
@@ -82,35 +76,37 @@ public class nEihTServer implements Runnable {
     }
 }
 
-    class Client implements Runnable {
+class Client extends Thread {
     private DataInputStream is;
-    private PrintStream os;
+    private PrintStream os = null;
     private Socket client;
     private int maxClients;
-    private final Socket[] clients;
+    private final Client[] clients;
     private final int index;
 
-    public Client(Socket client, int index, Socket[] clients) {
+    public Client(Socket client, int index, Client[] clients) {
         this.index = index;
         this.client = client;
         this.clients = clients;
+        maxClients = clients.length;
     }
 
         public void run() {
             int maxClients = this.maxClients;
-            Socket[] clients = this.clients;
+            Client[] clients = this.clients;
 
                try
                {
                    is = new DataInputStream(client.getInputStream());
                    os = new PrintStream(client.getOutputStream());
                    while(true) {
-                       String message = readMessage(client);
-                       System.out.println("Client " + this.index + " wrote: " + message + "\n");
-                       for (int i = 0; i < 8; i++){
-                           if(clients[i] != null) {
-                               writeMessage(clients[i], message);
-                           } else { break;}
+
+                       String line = is.readLine();
+
+                       for (int i = 0; i < maxClients; i++){
+                           if(clients[i] != null && clients[i] != this) {
+                               clients[i].os.println("client " + this.index + ": " + line);
+                           }
                        }
                    }
                } catch (IOException e) {
@@ -118,16 +114,8 @@ public class nEihTServer implements Runnable {
                }
         }
 
-        private void writeMessage(Socket socket, String message) throws IOException {
-            OutputStreamWriter a = new OutputStreamWriter(socket.getOutputStream());
-            PrintWriter b = new PrintWriter(a);
 
-            PrintWriter printWriter = new PrintWriter(b);
-            printWriter.print(message);
-            printWriter.flush();
-        }
-
-        private String readMessage(Socket socket) throws IOException {
+    private String readMessage(Socket socket) throws IOException {
             BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
             char[] buffer = new char[256];
@@ -135,5 +123,5 @@ public class nEihTServer implements Runnable {
             String message = new String(buffer, 0, digitNumber);
             return message;
         }
-    }
+}
 
