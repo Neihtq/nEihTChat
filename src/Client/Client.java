@@ -8,14 +8,10 @@ import java.io.*;
 import java.util.Scanner;
 
 public class Client {
-    public static void main(String[] args) {
-        Client client = new Client();
-        try {
-            client.test();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+
+    private String name;
+
+    public Client (String name) { this.name = name; }
 
     void test() throws IOException {
         String ip = "127.0.0.1"; // localhost
@@ -23,8 +19,11 @@ public class Client {
 
         Socket socket = new Socket(ip, port); // connects to server
 
+        //sendName(socket);
+
         while (true) {
         Scanner sc = new Scanner(System.in);
+        System.out.println("You: ");
         String message = sc.nextLine();
 
         writeMessage(socket, message);
@@ -32,6 +31,13 @@ public class Client {
         //String rec_message = readMessage(socket);
         //System.out.println(rec_message);
         }
+    }
+
+    void sendName(Socket socket) throws IOException{
+        PrintWriter printWriter =
+                new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
+        printWriter.print(this.name);
+        printWriter.flush();
     }
 
     void writeMessage(Socket socket, String message) throws IOException {

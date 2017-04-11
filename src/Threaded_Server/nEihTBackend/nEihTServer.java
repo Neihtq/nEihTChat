@@ -4,24 +4,29 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Created by ThiEn on 11.04.2017.
  */
 public class nEihTServer implements Runnable {
 
-    private int serverPort = 1995;
-    private ServerSocket serverSocket = null;
+    private int serverPort;
+    private ServerSocket serverSocket;
     private boolean stopped = false;
-    private Thread runningThread = null;
+
+    private final int max_socket = 8;
+
+    Socket[] room = new Socket[max_socket];
 
     public nEihTServer(int port) {
         this.serverPort = port;
     }
 
     public void run() {
+        int c = 0;
         openSocket();
-        System.out.println("Starte Server...");
+        System.out.println("Start Server...");
         while (!(this.stopped)) {
             Socket clientSocket = null;
             try {
@@ -34,11 +39,33 @@ public class nEihTServer implements Runnable {
                 }
                 throw new RuntimeException("Error accepting client connection", e);
             }
-            System.out.println("Client verbunden!");
-            new Thread(new Reader(clientSocket)).start();
+            System.out.println("Found client!");
+            if(c == max_socket) {
+                System.out.println("Room is full!");
+                try {
+                    writeMessage(clientSocket);
+                    clientSocket.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                room[c] = clientSocket;
+                System.out.println("Client connected");
+                new Thread(new Reader(clientSocket, c)).start();
+                c++;
+            }
         }
 
         System.out.println("Server stopped");
+    }
+
+    private void writeMessage(Socket socket) throws IOException {
+        OutputStreamWriter a = new OutputStreamWriter(socket.getOutputStream());
+        PrintWriter b = new PrintWriter(a);
+
+        PrintWriter printWriter = new PrintWriter(b);
+        printWriter.print("Server too busy, try again later");
+        printWriter.flush();
     }
 
 
@@ -52,17 +79,19 @@ public class nEihTServer implements Runnable {
 }
 
     class Reader implements Runnable {
-    private Socket client = null;
 
-    public Reader(Socket client) { this.client = client; }
+    private Socket client;
+    private int index;
+
+    public Reader(Socket client, int index) { this.client = client; this.index = index; }
 
         public void run() {
             while (true) {
                try
                {
-                   System.out.println("Empfange Nachrichtg");
+                   System.out.print("Client " + this.index + " wrote: ");
                    String message = readMessage(client);
-                   System.out.println(message);
+                   System.out.print(message + "\n");
                } catch (IOException e) {
                    e.printStackTrace();
                }
