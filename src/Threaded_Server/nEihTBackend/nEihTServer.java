@@ -4,11 +4,11 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.io.IOException;
-import java.util.ArrayList;
 
 /**
  * Created by ThiEn on 11.04.2017.
  */
+
 public class nEihTServer implements Runnable {
 
     private int serverPort;
@@ -31,6 +31,24 @@ public class nEihTServer implements Runnable {
             Socket clientSocket = null;
             try {
                 clientSocket = this.serverSocket.accept();
+                System.out.println("Found client!");
+
+                if(c == max_socket) {
+                    System.out.println("Room is full!");
+                        toFull(clientSocket);
+                        clientSocket.close();
+                } else {
+                    room[c] = clientSocket;
+                    System.out.println("Client connected");
+                    new Thread(new Client(clientSocket, c, room)).start();
+                    c++;
+                }
+
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
 
             } catch (IOException e) {
                 if (this.stopped) {
@@ -39,27 +57,13 @@ public class nEihTServer implements Runnable {
                 }
                 throw new RuntimeException("Error accepting client connection", e);
             }
-            System.out.println("Found client!");
-            if(c == max_socket) {
-                System.out.println("Room is full!");
-                try {
-                    writeMessage(clientSocket);
-                    clientSocket.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                room[c] = clientSocket;
-                System.out.println("Client connected");
-                new Thread(new Reader(clientSocket, c)).start();
-                c++;
-            }
+
         }
 
         System.out.println("Server stopped");
     }
 
-    private void writeMessage(Socket socket) throws IOException {
+    private void toFull(Socket socket) throws IOException {
         OutputStreamWriter a = new OutputStreamWriter(socket.getOutputStream());
         PrintWriter b = new PrintWriter(a);
 
@@ -78,24 +82,49 @@ public class nEihTServer implements Runnable {
     }
 }
 
-    class Reader implements Runnable {
-
+    class Client implements Runnable {
+    private DataInputStream is;
+    private PrintStream os;
     private Socket client;
-    private int index;
+    private int maxClients;
+    private final Socket[] clients;
+    private final int index;
 
-    public Reader(Socket client, int index) { this.client = client; this.index = index; }
+    public Client(Socket client, int index, Socket[] clients) {
+        this.index = index;
+        this.client = client;
+        this.clients = clients;
+    }
 
         public void run() {
-            while (true) {
+            int maxClients = this.maxClients;
+            Socket[] clients = this.clients;
+
                try
                {
-                   System.out.print("Client " + this.index + " wrote: ");
-                   String message = readMessage(client);
-                   System.out.print(message + "\n");
+                   is = new DataInputStream(client.getInputStream());
+                   os = new PrintStream(client.getOutputStream());
+                   while(true) {
+                       String message = readMessage(client);
+                       System.out.println("Client " + this.index + " wrote: " + message + "\n");
+                       for (int i = 0; i < 8; i++){
+                           if(clients[i] != null) {
+                               writeMessage(clients[i], message);
+                           } else { break;}
+                       }
+                   }
                } catch (IOException e) {
                    e.printStackTrace();
                }
-            }
+        }
+
+        private void writeMessage(Socket socket, String message) throws IOException {
+            OutputStreamWriter a = new OutputStreamWriter(socket.getOutputStream());
+            PrintWriter b = new PrintWriter(a);
+
+            PrintWriter printWriter = new PrintWriter(b);
+            printWriter.print(message);
+            printWriter.flush();
         }
 
         private String readMessage(Socket socket) throws IOException {

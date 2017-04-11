@@ -7,19 +7,19 @@ import java.net.Socket;
 import java.io.*;
 import java.util.Scanner;
 
-public class Client {
+public class Client implements Runnable{
 
     private String name;
+    String ip = "127.0.0.1"; // localhost
+    int port = 1995;
 
     public Client (String name) { this.name = name; }
 
     void test() throws IOException {
-        String ip = "127.0.0.1"; // localhost
-        int port = 1995;
-
-        Socket socket = new Socket(ip, port); // connects to server
-
+        Socket socket = new Socket(ip, port);
         //sendName(socket);
+
+        new Thread().start();
 
         while (true) {
         Scanner sc = new Scanner(System.in);
@@ -27,9 +27,6 @@ public class Client {
         String message = sc.nextLine();
 
         writeMessage(socket, message);
-
-        //String rec_message = readMessage(socket);
-        //System.out.println(rec_message);
         }
     }
 
@@ -53,5 +50,22 @@ public class Client {
         int digitNumber = bufferedReader.read(buffer, 0, 256); //blocks until message received
         String message = new String(buffer, 0, digitNumber);
         return message;
+    }
+
+    void receive() throws IOException{
+        Socket socket = new Socket(ip, port);
+
+        String rec_message = readMessage(socket);
+        System.out.println(rec_message);
+    }
+
+    public void run() {
+        try {
+            while (true) {
+                receive();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
