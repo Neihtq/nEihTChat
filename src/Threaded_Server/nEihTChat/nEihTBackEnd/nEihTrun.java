@@ -1,4 +1,6 @@
-package Threaded_Server.nEihTBackend;
+package Threaded_Server.nEihTChat.nEihTBackEnd;
+
+import Threaded_Server.nEihTChat.nEihTBackEnd.nEihTServer;
 
 /**
  * Created by ThiEn on 11.04.2017.
