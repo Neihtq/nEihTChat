@@ -1,4 +1,4 @@
-package Threaded_Server.nEihTChat.Client;
+package nEihTChat.Client;
 
 import java.io.*;
 import java.net.Socket;
