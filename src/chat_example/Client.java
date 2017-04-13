@@ -41,7 +41,7 @@ public class Client implements Runnable{
             os = new PrintStream(clientSocket.getOutputStream());
             is = new DataInputStream(clientSocket.getInputStream());
         } catch (UnknownHostException e) {
-            System.err.println("Don't lnow about host " + host);
+            System.err.println("Don't know about host " + host);
         } catch (IOException e) {
             System.err.println("Couldn't get I/O for the connection to the host " + host);
         }

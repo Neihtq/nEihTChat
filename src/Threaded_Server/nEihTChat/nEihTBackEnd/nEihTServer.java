@@ -99,16 +99,38 @@ class Client extends Thread {
                {
                    is = new DataInputStream(client.getInputStream());
                    os = new PrintStream(client.getOutputStream());
-                   while(true) {
 
+                   // Client's name
+                   String name = readMessage(this.client);
+                   System.out.println(name + " has entered the room.");
+
+                   // reading message from client and sending it to other clients in the room
+                   while(true) {
                        String line = is.readLine();
 
+                       if (line.startsWith(":q")) break;
+
+                       System.out.println(name + ": " + line);
+
+                       // Sending the message to the chat room/everyone
                        for (int i = 0; i < maxClients; i++){
                            if(clients[i] != null && clients[i] != this) {
-                               clients[i].os.println("client " + this.index + ": " + line);
+                               clients[i].os.println( name + ": " + line);
                            }
                        }
                    }
+                   os.println("You have left.");
+
+                   // Clean up
+                   for (int i = 0; i < maxClients; i++){
+                       if (clients[i] == this) {
+                           clients[i] = null;
+                       }
+                   }
+
+                   is.close();
+                   os.close();
+                   client.close();
                } catch (IOException e) {
                    e.printStackTrace();
                }

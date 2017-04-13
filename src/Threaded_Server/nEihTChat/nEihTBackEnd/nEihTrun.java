@@ -12,10 +12,5 @@ public class nEihTrun {
 
         new Thread(nEihT).start();
 
-        try {
-            Thread.sleep(20 * 1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 }
