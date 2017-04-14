@@ -1,5 +1,7 @@
 package nEihTChat.Client;
 
+import javafx.application.Application;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 
@@ -29,6 +31,11 @@ public class nEihTClient implements Runnable{
         this.name = name;
     }
 
+
+
+
+
+
     public void test() {
 
         try {
@@ -47,6 +54,7 @@ public class nEihTClient implements Runnable{
             try {
                 new Thread(this).start(); // Thread that reads from the server
                 while (!closed) {
+
                     os.println(inputLine.readLine().trim());
                 }
                 os.close();
@@ -58,11 +66,11 @@ public class nEihTClient implements Runnable{
         }
     }
 
-    public void sendMessage() throws IOException{
+    public void sendMessage(String msg) throws IOException{
         clientSocket = new Socket(ip, port);
         PrintWriter printWriter =
                 new PrintWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
-        printWriter.print(message_box.getText());
+        printWriter.print(msg);
         printWriter.flush();
     }
 

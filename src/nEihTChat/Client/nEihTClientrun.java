@@ -9,20 +9,26 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.event.ActionEvent;
 
+import static javafx.application.Application.launch;
+
 /**
  * Created by thien on 13.04.17.
  */
-public class nEihTClientrun extends Thread{
+public class nEihTClientrun extends Application{
 
-
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        String name = "test";
-        nEihTClient neiht = new nEihTClient(name);
-        new Thread(new Controller()).start();
-        neiht.test();
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        Parent root = FXMLLoader.load(getClass().getResource("ClientGUI.fxml"));
+        primaryStage.setTitle("Test");
+        Scene scene = new Scene(root, 599, 466);
+        primaryStage.setScene(scene);
+        primaryStage.show();
     }
 
+    public static void main(String[] args) {
+        String name = "test";
+        nEihTClient neiht = new nEihTClient(name);
 
-
+        neiht.test();
+    }
 }
