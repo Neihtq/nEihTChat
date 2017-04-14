@@ -1,13 +1,21 @@
 package nEihTChat.Client;
 
+import javafx.fxml.FXML;
+import javafx.scene.control.TextArea;
+
+import javax.xml.soap.Text;
 import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Scanner;
 
 /**
  * Created by ThiEn on 11.04.2017.
  */
 public class nEihTClient implements Runnable{
+    @FXML
+    private TextArea message_box;
+
     private static Socket clientSocket;
     private static PrintStream os;
     private static DataInputStream is;
@@ -48,6 +56,14 @@ public class nEihTClient implements Runnable{
                 e.printStackTrace();
             }
         }
+    }
+
+    public void sendMessage() throws IOException{
+        clientSocket = new Socket(ip, port);
+        PrintWriter printWriter =
+                new PrintWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
+        printWriter.print(message_box.getText());
+        printWriter.flush();
     }
 
     void sendName(Socket socket) throws IOException{

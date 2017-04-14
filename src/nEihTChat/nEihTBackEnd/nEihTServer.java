@@ -106,7 +106,7 @@ class Client extends Thread {
 
                    // reading message from client and sending it to other clients in the room
                    while(true) {
-                       String line = is.readLine();
+                       String line = readMessage(this.client);
 
                        if (line.startsWith(":q")) break;
 

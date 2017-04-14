@@ -12,28 +12,17 @@ import javafx.event.ActionEvent;
 /**
  * Created by thien on 13.04.17.
  */
-public class nEihTClientrun extends Application{
+public class nEihTClientrun extends Thread{
 
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("ClientGUI.fxml"));
-        primaryStage.setTitle("Test");
-        Scene scene = new Scene(root, 300, 275);
-        primaryStage.setScene(scene);
-        primaryStage.show();
-    }
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        String name = sc.nextLine();
+        String name = "test";
         nEihTClient neiht = new nEihTClient(name);
-        launch(args);
+        new Thread(new Controller()).start();
         neiht.test();
     }
 
-    @FXML
-    protected void test1() {
-        System.out.println("Test");
-    }
+
 
 }
