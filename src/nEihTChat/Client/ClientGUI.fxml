@@ -50,6 +50,9 @@
                      </children>
                   </HBox>
                </right>
+               <bottom>
+                  <Button mnemonicParsing="false" onAction="#connect" text="Connect" BorderPane.alignment="CENTER" />
+               </bottom>
             </BorderPane>
          </content>
     </Tab>
@@ -70,7 +73,7 @@
                   <HBox spacing="10.0" BorderPane.alignment="CENTER_RIGHT">
                      <children>
                         <TextArea fx:id="message_box" prefHeight="36.0" prefWidth="433.0" />
-                        <Button fx:id="send_bt" mnemonicParsing="false" prefHeight="59.0" prefWidth="133.0" text="Send" />
+                        <Button fx:id="send_bt" mnemonicParsing="false" onAction="#send" prefHeight="59.0" prefWidth="133.0" text="Send" />
                      </children>
                      <BorderPane.margin>
                         <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />

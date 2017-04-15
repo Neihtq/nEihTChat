@@ -29,6 +29,11 @@ public class nEihTClient implements Runnable{
 
     public nEihTClient (String name){
         this.name = name;
+        try {
+            clientSocket = new Socket(ip, port);
+    } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -39,11 +44,10 @@ public class nEihTClient implements Runnable{
     public void test() {
 
         try {
-            clientSocket = new Socket(ip, port);
             inputLine = new BufferedReader(new InputStreamReader(System.in));
             os = new PrintStream(clientSocket.getOutputStream());
             is = new DataInputStream((clientSocket.getInputStream()));
-            sendName(clientSocket);
+            sendName(this.clientSocket);
         } catch (UnknownHostException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -54,7 +58,6 @@ public class nEihTClient implements Runnable{
             try {
                 new Thread(this).start(); // Thread that reads from the server
                 while (!closed) {
-
                     os.println(inputLine.readLine().trim());
                 }
                 os.close();
@@ -67,9 +70,8 @@ public class nEihTClient implements Runnable{
     }
 
     public void sendMessage(String msg) throws IOException{
-        clientSocket = new Socket(ip, port);
         PrintWriter printWriter =
-                new PrintWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
+                new PrintWriter(new OutputStreamWriter(this.clientSocket.getOutputStream()));
         printWriter.print(msg);
         printWriter.flush();
     }

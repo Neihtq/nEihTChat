@@ -16,32 +16,27 @@ import java.io.IOException;
 /**
  * Created by thien on 14.04.17.
  */
-public class Controller extends Application implements Runnable {
-    @FXML
-    private TextArea message_box;
+public class Controller{
+    @FXML private TextArea message_box;
 
 
     public static nEihTClient client;
 
-
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("ClientGUI.fxml"));
-        primaryStage.setTitle("Test");
-        Scene scene = new Scene(root, 599, 466);
-        primaryStage.setScene(scene);
-        primaryStage.show();
+    public Controller () {
     }
 
 
-    public void run(){
-        launch();
+    @FXML
+    public void connect(){
+        String name = "test";
+        this.client = new nEihTClient(name);
+        (new Thread(new Helper(this.client))).start();
     }
 
     @FXML
-    public void send(ActionEvent e){
+    public void send(){
         try {
-            client.sendMessage(message_box.getText());
+            this.client.sendMessage(message_box.getText());
         } catch (IOException ex) {
             ex.printStackTrace();
         }

@@ -7,14 +7,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.event.ActionEvent;
 
-import static javafx.application.Application.launch;
 
 /**
  * Created by thien on 13.04.17.
  */
-public class nEihTClientrun extends Application{
+public class nEihTClientrun extends Application implements Runnable{
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -26,9 +24,10 @@ public class nEihTClientrun extends Application{
     }
 
     public static void main(String[] args) {
-        String name = "test";
-        nEihTClient neiht = new nEihTClient(name);
+        (new Thread(new nEihTClientrun())).start();
+    }
 
-        neiht.test();
+    public void run(){
+        launch();
     }
 }
