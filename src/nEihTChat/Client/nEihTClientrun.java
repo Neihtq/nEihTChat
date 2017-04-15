@@ -24,7 +24,7 @@ public class nEihTClientrun extends Application implements Runnable{
     }
 
     public static void main(String[] args) {
-        (new Thread(new nEihTClientrun())).start();
+       launch(args);
     }
 
     public void run(){

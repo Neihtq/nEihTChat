@@ -62,7 +62,7 @@
                <center>
                   <HBox prefHeight="326.0" prefWidth="441.0" spacing="10.0" BorderPane.alignment="TOP_RIGHT">
                      <children>
-                        <Label fx:id="chat_protocol" prefHeight="344.0" prefWidth="432.0" text="Chat" />
+                        <TextArea fx:id="chat_protocol" prefHeight="346.0" prefWidth="456.0" />
                      </children>
                      <BorderPane.margin>
                         <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
