@@ -21,8 +21,8 @@ public class Controller{
     @FXML private TextArea chat_protocol;
     @FXML private TextField name_box;
     @FXML private Button connect_bt;
-    @FXML private TabPane tabpane;
     @FXML private HBox hbox_bot;
+    @FXML private Label name_label;
 
     public static nEihTClient client;
 
@@ -43,6 +43,7 @@ public class Controller{
             Label status = new Label();
             status.setText("Connected as: " + name);
             hbox_bot.getChildren().add(status);
+            name_label.setText(name);
         }
     }
 

@@ -24,9 +24,6 @@
     <Tab text="Contacts">
          <content>
             <BorderPane prefHeight="200.0" prefWidth="200.0">
-               <left>
-                  <TreeView prefHeight="429.0" prefWidth="346.0" BorderPane.alignment="CENTER" />
-               </left>
                <top>
                   <MenuBar prefHeight="16.0" prefWidth="600.0" BorderPane.alignment="CENTER">
                     <menus>
@@ -51,7 +48,7 @@
                <right>
                   <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER_RIGHT">
                      <children>
-                        <Label prefHeight="19.0" prefWidth="197.0" text="Name" HBox.hgrow="ALWAYS" />
+                        <Label fx:id="name_label" prefHeight="19.0" prefWidth="197.0" text="Name" HBox.hgrow="ALWAYS" />
                      </children>
                   </HBox>
                </right>
@@ -66,6 +63,12 @@
                      </BorderPane.margin>
                   </HBox>
                </bottom>
+               <center>
+                  <TreeView BorderPane.alignment="CENTER">
+                     <BorderPane.margin>
+                        <Insets left="5.0" right="5.0" top="5.0" />
+                     </BorderPane.margin></TreeView>
+               </center>
             </BorderPane>
          </content>
     </Tab>
@@ -73,7 +76,7 @@
          <content>
             <BorderPane prefHeight="200.0" prefWidth="200.0">
                <center>
-                  <HBox prefHeight="326.0" prefWidth="441.0" spacing="10.0" BorderPane.alignment="TOP_RIGHT">
+                  <HBox spacing="10.0" BorderPane.alignment="TOP_RIGHT">
                      <children>
                         <TextArea fx:id="chat_protocol" prefHeight="346.0" prefWidth="456.0" />
                      </children>
