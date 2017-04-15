@@ -7,9 +7,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -20,7 +19,10 @@ import java.io.IOException;
 public class Controller{
     @FXML private TextArea message_box;
     @FXML private TextArea chat_protocol;
-
+    @FXML private TextField name_box;
+    @FXML private Button connect_bt;
+    @FXML private TabPane tabpane;
+    @FXML private HBox hbox_bot;
 
     public static nEihTClient client;
 
@@ -29,10 +31,19 @@ public class Controller{
 
 
     @FXML
-    public void connect(){
-        String name = "test";
+    public void connect() throws IOException{
+        String name = name_box.getText();
         this.client = new nEihTClient(name);
         (new Thread(new Helper(this.client))).start();
+
+        if (client != null)
+        {
+            hbox_bot.getChildren().remove(connect_bt);
+            hbox_bot.getChildren().remove(name_box);
+            Label status = new Label();
+            status.setText("Connected as: " + name);
+            hbox_bot.getChildren().add(status);
+        }
     }
 
     @FXML
