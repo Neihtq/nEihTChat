@@ -115,7 +115,8 @@ class Client extends Thread {
                        // Sending the message to the chat room/everyone
                        for (int i = 0; i < maxClients; i++){
                            if(clients[i] != null && clients[i] != this) {
-                               clients[i].os.println( name + ": " + line);
+                               sendMessage(clients[i].client, line);
+                               //clients[i].os.println( name + ": " + line);
                            }
                        }
                    }
@@ -145,5 +146,13 @@ class Client extends Thread {
             String message = new String(buffer, 0, digitNumber);
             return message;
         }
+
+    public void sendMessage(Socket client, String msg) throws IOException{
+        PrintWriter printWriter =
+                new PrintWriter(new OutputStreamWriter(client.getOutputStream()));
+        printWriter.print(msg);
+        printWriter.flush();
+    }
+
 }
 

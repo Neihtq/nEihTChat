@@ -15,8 +15,7 @@ import java.util.Scanner;
  * Created by ThiEn on 11.04.2017.
  */
 public class nEihTClient implements Runnable{
-    @FXML
-    private TextArea message_box;
+    @FXML private TextArea chat_protocol;
 
     private static Socket clientSocket;
     private static PrintStream os;
@@ -83,11 +82,25 @@ public class nEihTClient implements Runnable{
         printWriter.flush();
     }
 
+    private String readMessage(Socket socket) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+        char[] buffer = new char[256];
+        int digitNumber = br.read(buffer, 0, 256); // blocks until message received
+        String message = new String(buffer, 0, digitNumber);
+        return message;
+    }
+
     public void run() {
         String response;
         try {
-            while ((response = is.readLine()) != null) {
+            /*while ((response = is.readLine()) != null) {
+                System.out.println(response);*/
+            while(true)
+            {
+                response = "\n" + readMessage(this.clientSocket);
                 System.out.println(response);
+                //chat_protocol.appendText(response);
                 if (response.indexOf("You have left.") != -1) break;
             }
         } catch (IOException e) {

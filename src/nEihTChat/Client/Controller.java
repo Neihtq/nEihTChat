@@ -24,6 +24,8 @@ public class Controller{
     @FXML private HBox hbox_bot;
     @FXML private Label name_label;
 
+    private String name;
+
     public static nEihTClient client;
 
     public Controller () {
@@ -32,7 +34,7 @@ public class Controller{
 
     @FXML
     public void connect() throws IOException{
-        String name = name_box.getText();
+        name = name_box.getText();
         this.client = new nEihTClient(name);
         (new Thread(new Helper(this.client))).start();
 
@@ -50,7 +52,8 @@ public class Controller{
     @FXML
     public void send(){
         try {
-            chat_protocol.setText(chat_protocol.getText() + "\n" + "Du: " + message_box.getText());
+            String msg_prot = "\n" + this.name + " : " + message_box.getText();
+            chat_protocol.appendText(msg_prot);
             this.client.sendMessage(message_box.getText());
         } catch (IOException ex) {
             ex.printStackTrace();
