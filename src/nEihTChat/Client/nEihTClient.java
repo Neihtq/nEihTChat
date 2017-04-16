@@ -26,7 +26,9 @@ public class nEihTClient implements Runnable{
     private static int port = 1995;
     private static String ip = "127.0.0.1";
 
-    public nEihTClient (String name){
+    public nEihTClient (String name, TextArea chat_protocol)
+    {
+        this.chat_protocol = chat_protocol;
         this.name = name;
         try {
             clientSocket = new Socket(ip, port);
@@ -92,15 +94,17 @@ public class nEihTClient implements Runnable{
     }
 
     public void run() {
-        String response;
+
         try {
             /*while ((response = is.readLine()) != null) {
                 System.out.println(response);*/
+            String response;
             while(true)
             {
-                response = "\n" + readMessage(this.clientSocket);
+                 response = readMessage(this.clientSocket);
+
                 System.out.println(response);
-                //chat_protocol.appendText(response);
+                chat_protocol.appendText(response);
                 if (response.indexOf("You have left.") != -1) break;
             }
         } catch (IOException e) {
