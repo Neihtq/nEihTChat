@@ -104,6 +104,11 @@ class Client extends Thread {
                    String name = readMessage(this.client);
                    System.out.println(name + " has entered the room.");
 
+                   for (int i = 0; i < maxClients; i++) {
+                       if (clients[i] != null) {
+                           sendMessage(clients[i].client, "setlbl" + name + " has joined the room.\n");
+                       }
+                   }
                    // reading message from client and sending it to other clients in the room
                    while(true) {
                        String line = readMessage(this.client);

@@ -1,16 +1,8 @@
 package nEihTChat.Client;
 
-import Client.Client;
-import javafx.application.Application;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
-import javafx.stage.Stage;
-
 import java.io.IOException;
 
 /**
@@ -23,6 +15,7 @@ public class Controller{
     @FXML private Button connect_bt;
     @FXML private HBox hbox_bot;
     @FXML private Label name_label;
+    @FXML private Label partner_name;
 
     private String name;
 
@@ -55,6 +48,7 @@ public class Controller{
             String msg_prot = this.name + " : " + message_box.getText() + "\n";
             chat_protocol.appendText(msg_prot);
             this.client.sendMessage(msg_prot);
+            message_box.setText("");
         } catch (IOException ex) {
             ex.printStackTrace();
         }

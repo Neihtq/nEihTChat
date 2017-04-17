@@ -1,21 +1,25 @@
 package nEihTChat.Client;
 
-import javafx.application.Application;
-import javafx.event.ActionEvent;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
-
-import javax.xml.soap.Text;
 import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.Scanner;
+import java.util.Observable;
 
 /**
  * Created by ThiEn on 11.04.2017.
  */
-public class nEihTClient implements Runnable{
+public class nEihTClient  implements Runnable{
     @FXML private TextArea chat_protocol;
+    @FXML private ListView<String> name_list;
+
+    private static final ObservableList<String> names =FXCollections.observableArrayList();
 
     private static Socket clientSocket;
     private static PrintStream os;
@@ -25,6 +29,7 @@ public class nEihTClient implements Runnable{
     private static boolean closed = false;
     private static int port = 1995;
     private static String ip = "127.0.0.1";
+
 
     public nEihTClient (String name, TextArea chat_protocol)
     {
@@ -98,14 +103,33 @@ public class nEihTClient implements Runnable{
         try {
             /*while ((response = is.readLine()) != null) {
                 System.out.println(response);*/
-            String response;
+            String response, tmp = "";
             while(true)
             {
-                 response = readMessage(this.clientSocket);
-
+                response = readMessage(this.clientSocket);
                 System.out.println(response);
-                chat_protocol.appendText(response);
-                if (response.indexOf("You have left.") != -1) break;
+
+                for(int i = 0; i < 6; i++){
+                    tmp = tmp + response.charAt(i);
+                }
+                System.out.println(tmp);
+                if (tmp.equals("setlbl")) {
+                    String reverse = new StringBuffer(response.substring(6)).reverse().toString();
+                    System.out.println(reverse);
+                    reverse = new StringBuffer(reverse.substring(21)).reverse().toString();
+                    //partner_name.setText(partner_name.getText() + "\n" + reverse);
+
+                    //names.add(reverse);
+                    names.addAll(reverse);
+
+                    name_list.setItems(names);
+
+                } else {
+                    chat_protocol.appendText(response);
+                    if (response.indexOf("You have left.") != -1) break;
+                }
+
+                tmp = "";
             }
         } catch (IOException e) {
             e.printStackTrace();
