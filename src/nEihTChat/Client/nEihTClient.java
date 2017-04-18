@@ -97,36 +97,55 @@ public class nEihTClient  implements Runnable{
         return message;
     }
 
+    private String[] receiveContainer(Socket socket) throws IOException, ClassNotFoundException {
+        ObjectInputStream os = new ObjectInputStream(socket.getInputStream());
+        String[] rec = (String[])os.readObject();
+        return rec;
+    }
+
     public void run() {
 
         try {
             /*while ((response = is.readLine()) != null) {
                 System.out.println(response);*/
-            String response, tmp = "";
+            String[] response, entries;
+            String tmp = "";
             while(true)
             {
-                response = readMessage(this.clientSocket);
-                System.out.println(response);
+                response = receiveContainer(this.clientSocket);
+                //response = readMessage(this.clientSocket);
+                System.out.println(response[0]);
 
-                for(int i = 0; i < 6; i++){
+              /*  for(int i = 0; i < 6; i++){
                     tmp = tmp + response.charAt(i);
                 }
-                System.out.println(tmp);
-                if (tmp.equals("setlbl")) {
-                    String reverse = new StringBuffer(response.substring(6)).reverse().toString();
+                System.out.println(tmp); */
+                if (response[0].equals("setlbl")) {
+                   /* String reverse = new StringBuffer(response.substring(6)).reverse().toString();
                     System.out.println(reverse);
-                    reverse = new StringBuffer(reverse.substring(21)).reverse().toString();
-                    member_list.appendText(reverse + "\n");
-                    //partner_name.setText(partner_name.getText() + "\n" + reverse);
-                    chat_protocol.appendText(response.substring(6));
+                    reverse = new StringBuffer(reverse.substring(21)).reverse().toString(); */
+                   entries = receiveContainer(this.clientSocket);
+                   String members = "";
+
+                   for (int i = 0; i < entries.length; i++) {
+                       if(entries[i] == null){
+                           break;
+                       }
+                       members = members + entries[i] + "\n";
+                   }
+
+                   member_list.setText(members);
+                   chat_protocol.appendText(response[2]);
                 } else {
-                    chat_protocol.appendText(response);
-                    if (response.indexOf("You have left.") != -1) break;
+                    chat_protocol.appendText(response[1]);
+                    if (response[1].indexOf("You have left.") != -1) break;
                 }
 
                 tmp = "";
             }
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
     }

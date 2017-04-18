@@ -18,6 +18,7 @@ public class nEihTServer implements Runnable {
 
     private final int max_socket = 8;
 
+    String[] names = new String[max_socket];
     Client[] room = new Client[max_socket];
 
     public nEihTServer(int port) {
@@ -39,7 +40,9 @@ public class nEihTServer implements Runnable {
                         clientSocket.close();
                 }
                 if (room[c] == null){
-                    (room[c] = new Client(clientSocket, room)).start();
+                    String name = readMessage(clientSocket);
+                    names[c] = name;
+                    (room[c] = new Client(clientSocket, room, names, c)).start();
                     System.out.println("Client connected");
                     c++;
                 }
@@ -66,6 +69,14 @@ public class nEihTServer implements Runnable {
         printWriter.flush();
     }
 
+    private String readMessage(Socket socket) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+        char[] buffer = new char[256];
+        int digitNumber = br.read(buffer, 0, 256); // blocks until message received
+        String message = new String(buffer, 0, digitNumber);
+        return message;
+    }
 
     private void openSocket() {
         try {
@@ -82,8 +93,13 @@ class Client extends Thread {
     private Socket client;
     private int maxClients;
     private final Client[] clients;
+    private final String[] names;
+    private int index;
+    private String command;
 
-    public Client(Socket client, Client[] clients) {
+    public Client(Socket client, Client[] clients, String[] names, int index) {
+        this.index = index;
+        this.names = names;
         this.client = client;
         this.clients = clients;
         maxClients = clients.length;
@@ -99,26 +115,43 @@ class Client extends Thread {
                    os = new PrintStream(client.getOutputStream());
 
                    // Client's name
-                   String name = readMessage(this.client);
-                   System.out.println(name + " has entered the room.");
+                   //String name = readMessage(this.client);
+                   System.out.println(names[index] + " has entered the room.");
+
 
                    for (int i = 0; i < maxClients; i++) {
+                       if (clients[i] != null && clients[i] != this) {
+                           clients[i].names[this.index] = this.names[this.index];
+                       }
                        if (clients[i] != null) {
-                           sendMessage(clients[i].client, "setlbl" + name + " has joined the room.\n");
+                           String[] container = {"setlbl", names[index], names[index] + " has joined the room.\n"};
+                           //sendMessage(clients[i].client, "setlbl" + names[index] + " has joined the room.\n");
+                           sendContainer(clients[i].client, container);
+
+                           try {
+                               Thread.sleep(500);
+                           } catch (InterruptedException e) {
+                               e.printStackTrace();
+                           }
+
+                           sendContainer(clients[i].client, names);
                        }
                    }
                    // reading message from client and sending it to other clients in the room
                    while(true) {
-                       String line = readMessage(this.client);
+                       String[] line = new String[2];
+                       line[0] = "sendmsg";
+                       line[1] = readMessage(this.client);
 
-                       if (line.startsWith(":q")) break;
+                       if (line[1].startsWith(":q")) break;
 
-                       System.out.println(name + ": " + line);
+                       System.out.println(names[index] + ": " + line);
 
                        // Sending the message to the chat room/everyone
                        for (int i = 0; i < maxClients; i++){
                            if(clients[i] != null && clients[i] != this) {
-                               sendMessage(clients[i].client, line);
+                               sendContainer(clients[i].client, line);
+                               //sendMessage(clients[i].client, line);
                                //clients[i].os.println( name + ": " + line);
                            }
                        }
@@ -130,6 +163,7 @@ class Client extends Thread {
                        if (clients[i] == this) {
                            clients[i] = null;
                        }
+                       clients[i].names[this.index] = null;
                    }
 
                    is.close();
@@ -155,6 +189,11 @@ class Client extends Thread {
                 new PrintWriter(new OutputStreamWriter(client.getOutputStream()));
         printWriter.print(msg);
         printWriter.flush();
+    }
+
+    private void sendContainer(Socket socket, String[] container) throws IOException {
+        ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
+        outputStream.writeObject(container);
     }
 
 }

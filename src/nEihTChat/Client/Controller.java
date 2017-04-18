@@ -1,14 +1,22 @@
 package nEihTChat.Client;
 
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+
+import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 /**
  * Created by thien on 14.04.17.
  */
-public class Controller{
+public class Controller implements Initializable{
     @FXML private TextArea message_box;
     @FXML private TextArea chat_protocol;
     @FXML private TextField name_box;
@@ -16,6 +24,7 @@ public class Controller{
     @FXML private HBox hbox_bot;
     @FXML private Label name_label;
     @FXML private TextArea member_list;
+    @FXML private ImageView profilepic;
 
     private String name;
 
@@ -24,6 +33,18 @@ public class Controller{
     public Controller () {
     }
 
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        File file = new File("src/holifestival.jpg");
+        try {
+            Image image = new Image(file.toURI().toString());
+            profilepic.setImage(image);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
 
     @FXML
     public void connect() throws IOException{
