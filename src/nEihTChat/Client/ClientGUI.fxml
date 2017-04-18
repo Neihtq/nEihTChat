@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<TabPane fx:id="tabpane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#changePic" prefHeight="537.0" prefWidth="599.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nEihTChat.Client.Controller">
+<TabPane fx:id="tabpane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="537.0" prefWidth="599.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nEihTChat.Client.Controller">
   <tabs>
     <Tab text="Tab1">
          <content>
@@ -61,7 +61,7 @@
                      <children>
                         <HBox spacing="15.0">
                            <children>
-                              <ImageView fx:id="profilepic" fitHeight="90.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true" />
+                              <ImageView fx:id="profilepic" fitHeight="90.0" fitWidth="90.0" onMouseClicked="#changePic" pickOnBounds="true" preserveRatio="true" />
                               <Label fx:id="name_label" prefHeight="19.0" prefWidth="197.0" text="Name" />
                            </children>
                            <VBox.margin>
@@ -91,7 +91,7 @@
                <bottom>
                   <HBox spacing="10.0" BorderPane.alignment="CENTER_RIGHT">
                      <children>
-                        <TextArea fx:id="message_box" prefHeight="36.0" prefWidth="433.0" />
+                        <TextArea fx:id="message_box" onKeyPressed="#keyPressed" prefHeight="36.0" prefWidth="433.0" />
                         <Button fx:id="send_bt" mnemonicParsing="false" onAction="#send" prefHeight="59.0" prefWidth="133.0" text="Send" />
                      </children>
                      <BorderPane.margin>

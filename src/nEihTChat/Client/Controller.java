@@ -1,12 +1,15 @@
 package nEihTChat.Client;
 
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -53,6 +56,15 @@ public class Controller {
         }
 
     } */
+
+    @FXML
+    public void keyPressed(KeyEvent keyEvent) {
+        if (keyEvent.getCode() == KeyCode.ENTER && !message_box.getText().equals(" ")) {
+                send();
+                message_box.setText("");
+        }
+    }
+
 
     @FXML
     public void connect() throws IOException{
