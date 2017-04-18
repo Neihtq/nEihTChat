@@ -1,12 +1,19 @@
 package nEihTChat.Client;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import javafx.stage.Window;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -16,7 +23,7 @@ import java.util.ResourceBundle;
 /**
  * Created by thien on 14.04.17.
  */
-public class Controller implements Initializable{
+public class Controller {
     @FXML private TextArea message_box;
     @FXML private TextArea chat_protocol;
     @FXML private TextField name_box;
@@ -25,6 +32,7 @@ public class Controller implements Initializable{
     @FXML private Label name_label;
     @FXML private TextArea member_list;
     @FXML private ImageView profilepic;
+    @FXML private TabPane tabPane;
 
     private String name;
 
@@ -34,7 +42,7 @@ public class Controller implements Initializable{
     }
 
 
-    @Override
+ /*   @Override
     public void initialize(URL location, ResourceBundle resources) {
         File file = new File("src/holifestival.jpg");
         try {
@@ -44,7 +52,7 @@ public class Controller implements Initializable{
             e.printStackTrace();
         }
 
-    }
+    } */
 
     @FXML
     public void connect() throws IOException{
@@ -61,6 +69,26 @@ public class Controller implements Initializable{
             hbox_bot.getChildren().add(status);
             name_label.setText(name);
         }
+    }
+
+    @FXML
+    public void changePic() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Choose Picture");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg"),
+                new FileChooser.ExtensionFilter("All Files", "*.*"));
+        File selectedFile = fileChooser.showOpenDialog(new Stage());
+        if (selectedFile != null) {
+            try {
+                String imagepath = selectedFile.toURI().toURL().toString();
+                Image image = new Image(imagepath);
+                profilepic.setImage(image);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
     @FXML
