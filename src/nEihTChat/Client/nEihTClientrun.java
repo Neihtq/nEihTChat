@@ -16,7 +16,7 @@ public class nEihTClientrun extends Application implements Runnable{
     @Override
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("ClientGUI.fxml"));
-        primaryStage.setTitle("Test");
+        primaryStage.setTitle("a.Live Messenger");
         Scene scene = new Scene(root, 599, 466);
         primaryStage.setScene(scene);
         primaryStage.show();
