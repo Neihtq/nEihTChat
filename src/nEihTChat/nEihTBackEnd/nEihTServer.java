@@ -39,7 +39,7 @@ public class nEihTServer implements Runnable {
                         clientSocket.close();
                 }
                 if (room[c] == null){
-                    (room[c] = new Client(clientSocket, c, room)).start();
+                    (room[c] = new Client(clientSocket, room)).start();
                     System.out.println("Client connected");
                     c++;
                 }
@@ -82,10 +82,8 @@ class Client extends Thread {
     private Socket client;
     private int maxClients;
     private final Client[] clients;
-    private final int index;
 
-    public Client(Socket client, int index, Client[] clients) {
-        this.index = index;
+    public Client(Socket client, Client[] clients) {
         this.client = client;
         this.clients = clients;
         maxClients = clients.length;

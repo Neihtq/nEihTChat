@@ -17,9 +17,7 @@ import java.util.Observable;
  */
 public class nEihTClient  implements Runnable{
     @FXML private TextArea chat_protocol;
-    @FXML private ListView<String> name_list;
-
-    private static final ObservableList<String> names =FXCollections.observableArrayList();
+    @FXML private TextArea member_list;
 
     private static Socket clientSocket;
     private static PrintStream os;
@@ -31,9 +29,10 @@ public class nEihTClient  implements Runnable{
     private static String ip = "127.0.0.1";
 
 
-    public nEihTClient (String name, TextArea chat_protocol)
+    public nEihTClient (String name, TextArea chat_protocol, TextArea member_list)
     {
         this.chat_protocol = chat_protocol;
+        this.member_list = member_list;
         this.name = name;
         try {
             clientSocket = new Socket(ip, port);
@@ -117,13 +116,9 @@ public class nEihTClient  implements Runnable{
                     String reverse = new StringBuffer(response.substring(6)).reverse().toString();
                     System.out.println(reverse);
                     reverse = new StringBuffer(reverse.substring(21)).reverse().toString();
+                    member_list.appendText(reverse + "\n");
                     //partner_name.setText(partner_name.getText() + "\n" + reverse);
-
-                    //names.add(reverse);
-                    names.addAll(reverse);
-
-                    name_list.setItems(names);
-
+                    chat_protocol.appendText(response.substring(6));
                 } else {
                     chat_protocol.appendText(response);
                     if (response.indexOf("You have left.") != -1) break;

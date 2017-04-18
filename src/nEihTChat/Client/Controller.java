@@ -15,7 +15,7 @@ public class Controller{
     @FXML private Button connect_bt;
     @FXML private HBox hbox_bot;
     @FXML private Label name_label;
-    @FXML private Label partner_name;
+    @FXML private TextArea member_list;
 
     private String name;
 
@@ -28,7 +28,7 @@ public class Controller{
     @FXML
     public void connect() throws IOException{
         this.name = name_box.getText();
-        this.client = new nEihTClient(this.name, this.chat_protocol);
+        this.client = new nEihTClient(this.name, this.chat_protocol, this.member_list);
         (new Thread(new Helper(this.client))).start();
 
         if (client != null)
