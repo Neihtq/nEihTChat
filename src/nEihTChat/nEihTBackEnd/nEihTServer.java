@@ -151,8 +151,6 @@ class Client extends Thread {
                        for (int i = 0; i < maxClients; i++){
                            if(clients[i] != null && clients[i] != this) {
                                sendContainer(clients[i].client, line);
-                               //sendMessage(clients[i].client, line);
-                               //clients[i].os.println( name + ": " + line);
                            }
                        }
                    }

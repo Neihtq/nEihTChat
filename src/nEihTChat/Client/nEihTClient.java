@@ -103,27 +103,21 @@ public class nEihTClient  implements Runnable{
         return rec;
     }
 
+
+    private void sendContainer(Socket socket, String[] container) throws IOException {
+        ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
+        outputStream.writeObject(container);
+    }
+
     public void run() {
 
         try {
-            /*while ((response = is.readLine()) != null) {
-                System.out.println(response);*/
             String[] response, entries;
-            String tmp = "";
             while(true)
             {
                 response = receiveContainer(this.clientSocket);
-                //response = readMessage(this.clientSocket);
-                System.out.println(response[0]);
 
-              /*  for(int i = 0; i < 6; i++){
-                    tmp = tmp + response.charAt(i);
-                }
-                System.out.println(tmp); */
                 if (response[0].equals("setlbl")) {
-                   /* String reverse = new StringBuffer(response.substring(6)).reverse().toString();
-                    System.out.println(reverse);
-                    reverse = new StringBuffer(reverse.substring(21)).reverse().toString(); */
                    entries = receiveContainer(this.clientSocket);
                    String members = "";
 
@@ -140,8 +134,6 @@ public class nEihTClient  implements Runnable{
                     chat_protocol.appendText(response[1]);
                     if (response[1].indexOf("You have left.") != -1) break;
                 }
-
-                tmp = "";
             }
         } catch (IOException e) {
             e.printStackTrace();

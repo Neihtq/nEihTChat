@@ -108,7 +108,8 @@ public class Controller {
         try {
             String msg_prot = this.name + " : " + message_box.getText() + "\n";
             chat_protocol.appendText(msg_prot);
-            this.client.sendMessage(msg_prot);
+            this.client.sendContainer(this.client.so)
+            //this.client.sendMessage(msg_prot);
             message_box.setText("");
         } catch (IOException ex) {
             ex.printStackTrace();
